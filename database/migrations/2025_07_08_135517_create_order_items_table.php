@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('orderItems', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->integer('product_id');
             $table->integer('quantity');
             $table->decimal('unitPrice', 10, 2);
             $table->foreignId('order_id')
