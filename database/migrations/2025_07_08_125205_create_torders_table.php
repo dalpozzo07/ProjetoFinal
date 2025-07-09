@@ -14,9 +14,16 @@ return new class extends Migration
             $table->dateTime('orderDate');
             $table->enum('status', ['PENDING', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELED']);
             $table->decimal('totalAmount',10,2);
+            
+            $table->foreignId('coupon_id')
+            ->nullable()
+            ->constrained('coupons')
+            ->onDelete('cascade');
+    
             $table->foreignId('user_id')
             ->constrained('users')
             ->onDelete('cascade');
+
             $table->foreignId('address_id')
             ->constrained('addresses')
             ->onDelete('cascade');
