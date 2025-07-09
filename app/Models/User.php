@@ -12,7 +12,7 @@ class User extends Model
         'name',
         'email',
         'password',
-        'role',
+       
     ];
 
     public function addresses() // a tabela dos usuarios tem varios endereços
@@ -20,7 +20,7 @@ class User extends Model
     return $this->hasMany(Address::class);
 }
 
- public function orders() // a tabela dos usuarios tem varios pedidos
+ public function orders() // a tabela dos usuarios tem 
 {
     return $this->hasMany(Order::class);
 }
