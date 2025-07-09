@@ -19,13 +19,24 @@ class Order extends Model
     ];
 
     
-    public function addresses() // a tabela dos pedidos tem varios endereços
+    protected function addresses() // a tabela dos pedidos tem varios endereços
 {
-    return $this->hasMany(Address::class);
+    return $this->hasMany(Address::class, 'address_id');
 }
 
-public function coupons() // a tabela dos pedidos tem varios cupons.
+    protected function coupons() // a tabela dos pedidos tem varios cupons.
 {
     return $this->hasMany(Coupon::class);
 }
+
+    protected function users() // pertence a um usuario
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+    protected function orderItems()
+{
+    return $this->hasMany(OrderItems::class);
+}
+
 }
