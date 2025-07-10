@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('state');
             $table->string('country');
+            
             $table->foreignId('user_id')
             ->constrained('users')
             ->onDelete('cascade');

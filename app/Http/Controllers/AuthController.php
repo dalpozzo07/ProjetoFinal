@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -12,21 +13,39 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
+        // data validation igual meu mano indiano falou
+        // vai validar os dados que estão no request
+
         $validatedData = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        $user = User::where('email', $validatedData['email']);
+        // aqui ele vai buscar se está dentro do BD, se estiver vai retornar algo, senão vai retornar null.
+
+        $user = User::where('email', $validatedData['email'])->first(); 
+
+
+        // vai verificar a senha do usuário, o bom da mensagem é que cobre a senha invalida 
+        // e o usuario inexistente
 
         if (!$user || !Hash::check($validatedData['password'], $user->password)){
-            return response()->json('', 401);
+            // se a senha não existir dentro do BD, retorna erro.
+            return response()->json('Usuário inválido', 401);
         }
 
-        return response()->json([
+
+        // retorna o usuario e o token gerado pelo sanctum
+
+            return response()->json([
             'user' => $user,
-            'token' => $user->createToken('token')->plainTextToken
+            'token' => $user->createToken('token')->plainTextToken,
+            'message' => 'Login bem sucedido'
+
         ]);
+   
+
     }
 
     public function register(Request $request)
