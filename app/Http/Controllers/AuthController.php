@@ -50,14 +50,23 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        // Validando os dados recebidos
         $validateData = $request->validate([
             'email' => 'required|unique:users,email|email',
             'name' => 'required',
-            'password' => ['required|confirmed']
+            'password' => 'required|confirmed',
         ]);
 
-        $newUser = User::create($validateData);
+        // Salvando os dados
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
 
-        return response()->json($newUser);
+        return response()->json([
+            'status' => true,
+            'message' => 'Registro bem sucedido'
+        ]);
     }
 }
