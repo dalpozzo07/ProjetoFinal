@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
 
-        // data validation igual meu mano indiano falou
+        // data validation igual meu mano indiano falou,
         // vai validar os dados que estão no request
 
         $validatedData = $request->validate([
@@ -63,6 +63,8 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+
+        // retorna o status e a mensagem
 
         return response()->json([
             'status' => true,
