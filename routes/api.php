@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
 Route::get('/');
 
@@ -20,4 +21,12 @@ Route::post('/register', [AuthController::class, 'register'])
 Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::post('/register-moderator', [AdminController::class, 'registerModerator'])
     ->name('register-moderator');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users/profile', [UserController::class, 'profile'])
+    ->name('profile');
+    Route::put('/users/profile', [UserController::class, 'profile'])
+    ->name('profile');
+    
 });
