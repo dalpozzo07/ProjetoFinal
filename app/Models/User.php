@@ -18,6 +18,11 @@ class User extends Model
        
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     public function addresses() // a tabela dos usuarios tem varios endereços
 {
     return $this->hasMany(Address::class);
