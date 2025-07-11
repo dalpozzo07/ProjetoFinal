@@ -29,8 +29,30 @@ class userController extends Controller
             'message' => 'Perfil atualizado com sucesso'
         ]);
 
-        
+    }
 
+    public function deleteProfile(Request $request)
+    {
+
+        // Para excluir o usuário, ele precisa confirmar a senha
+        $validatedData = $request->validate([
+            'password' => 'required'
+        ]); 
+
+        // verfica se é a mesma senha que ta no BD
+
+        if (!Hash::check($validatedData['password'], $request->user()->password)){
+            return response()->json('Senha incorreta', 401);
+        }
+
+        // se for deleta o usuário
         
+        $request->user()->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Perfil deletado com sucesso'
+        ]);
+
     }
 }
