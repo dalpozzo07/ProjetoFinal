@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -16,6 +17,8 @@ class AuthController extends Controller
 
         // data validation igual meu mano indiano falou,
         // vai validar os dados que estão no request
+
+        
 
         $validatedData = $request->validate([
             'email' => 'required|email',
@@ -38,12 +41,14 @@ class AuthController extends Controller
 
         // retorna o usuario e o token gerado pelo sanctum
 
-            return response()->json([
+     return response()->json([
             'user' => $user,
             'token' => $user->createToken('token')->plainTextToken,
             'message' => 'Login bem sucedido'
 
         ]);
+
+        Auth::user();
    
 
     }

@@ -19,7 +19,7 @@ class EnsureUserIsAdmin
         // verifica se o usuário está logado e se o role é admin
         // se não estiver logado, retorna acesso negado
         
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!Auth::check() || Auth::user()->role !== 'ADMIN') {
             abort(403, 'Acesso negado');
         }
         return $next($request);

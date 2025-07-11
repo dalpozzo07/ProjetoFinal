@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
     public function registerModerator(Request $request)
     {
+        // vai validar os dados inseridos
+        Auth::user();
+
         $validateData = $request->validate([
             'email' => 'required|unique:users,email|email',
             'name' => 'required',
@@ -30,5 +34,8 @@ class AdminController extends Controller
             'status' => true,
             'message' => 'Registro bem sucedido'
         ]);
+
+        // isso daqui foi lindo de fazer
+        
     }
 }
