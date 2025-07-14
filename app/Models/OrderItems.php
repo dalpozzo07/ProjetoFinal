@@ -16,12 +16,12 @@ class OrderItems extends Model
 
     ];
 
-    protected function orders()
+    public function orders()
     {
         return $this->belongsTo(Order::class, 'order_id');
     }
 
-    protected function products()
+    public function products()
     {
         return $this->hasMany(Product::class, 'product_id');
     }

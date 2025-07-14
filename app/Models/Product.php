@@ -17,17 +17,17 @@ class Product extends Model
         'discount_id',
     ];
 
-    protected function categories()
+    public function categories()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    protected function orderItems()
+    public function orderItems()
     {
         return $this->belongsTo(orderItems::class, 'product_id');
     }
 
-    protected function discounts()
+    public function discounts()
     {
         return $this->hasMany(Discount::class, 'discount_id');
     }

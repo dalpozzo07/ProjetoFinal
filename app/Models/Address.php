@@ -18,12 +18,12 @@ class Address extends Model
         'user_id',
     ];
 
-    protected function users() // pertence a um usuario
+    public function users() // pertence a um usuario
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    protected function orders() // pertence a um usuario
+    public function orders() // pertence a um usuario
     {
         return $this->belongsTo(Order::class, 'address_id');
     }

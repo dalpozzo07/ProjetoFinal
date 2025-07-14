@@ -16,7 +16,7 @@ class Coupon extends Model
         'discountPercentage'
     ];
     
-    protected function orders() 
+    public function orders() 
     {
         return $this->belongsTo(Order::class, 'coupon_id');
     }

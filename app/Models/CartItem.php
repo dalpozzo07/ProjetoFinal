@@ -16,7 +16,7 @@ class CartItem extends Model
         'product_id'
     ];
 
-  protected function carts() // pertence a um usuario
+  public function carts() // pertence a um usuario
     {
         return $this->belongsTo(Cart::class, 'cart_id');
     }

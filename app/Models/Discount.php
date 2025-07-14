@@ -16,7 +16,7 @@ class Discount extends Model
         'discountPercentage',
     ];
 
-    protected function products()
+    public function products()
     {
         return $this->belongsTo(Product::class);
     }

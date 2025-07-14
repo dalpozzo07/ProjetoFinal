@@ -29,12 +29,12 @@ class User extends Model
     return $this->hasMany(Address::class);
 }
 
- public function orders() // a tabela dos usuarios tem 
+    public function orders() // a tabela dos usuarios tem 
 {
     return $this->hasMany(Order::class);
 }
 
-public function carts() // a tabela users tem 1 cart para cada usuario.
+    public function carts() // a tabela users tem 1 cart para cada usuario.
 {
     return $this->hasOne(Cart::class);
 }
