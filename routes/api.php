@@ -9,6 +9,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\CouponsController;
 
 Route::get('/');
 
@@ -40,7 +41,14 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::post('/discounts', [DiscountController::class, 'createDiscount']);
     Route::put('/discounts/{id}', [DiscountController::class, 'updateDiscount']);
     Route::delete('/discounts/{id}', [DiscountController::class, 'deleteDiscount']);
+
+    //CRUD de cupons
+    Route::get('/coupons', [CouponsController::class, 'cupons']);
+    Route::post('/coupons', [CouponsController::class, 'createCupons']);
+    Route::put('/coupons/{id}', [CouponsController::class, 'updateCupons']);
+    Route::delete('/coupons/{id}', [CouponsController::class, 'deleteCupons']);
 });
+
 
 Route::middleware('auth:sanctum')->group(function () {
 
