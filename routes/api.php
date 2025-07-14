@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\DiscountController;
 
 Route::get('/');
 
@@ -32,20 +34,30 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::post('/categories', [CategoryController::class, 'createCategory']);
     Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
     Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
+
+    //CRUD de discontos 
+    ROute::get('/discounts', [DiscountController::class, 'discount']);
+    Route::post('/discounts', [DiscountController::class, 'createDiscount']);
+    Route::put('/discounts/{id}', [DiscountController::class, 'updateDiscount']);
+    Route::delete('/discounts/{id}', [DiscountController::class, 'deleteDiscount']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    //perfil do usuário
-    Route::get('/users/profile', [UserController::class, 'profile']);
-    Route::put('/users/profile', [UserController::class, 'updateProfile']);
-    Route::delete('users/profile', [UserController::class, 'deleteProfile']);
+    // Perfil do usuário
+    Route::get('/user/profile', [UserController::class, 'profile']);
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
+    Route::delete('user/profile', [UserController::class, 'deleteProfile']);
     
-    //endereço do usuário
-    Route::get('/users/address', [AddressController::class, 'address']);
-    Route::post('/users/address', [AddressController::class, 'createAddress']);
-    Route::put('/users/address/{id}', [AddressController::class, 'updateAddress']);
-    Route::delete('/users/address/{id}', [AddressController::class, 'deleteAddress']);
+    // Endereço do usuário
+    Route::get('/user/address', [AddressController::class, 'address']);
+    Route::post('/user/address', [AddressController::class, 'createAddress']);
+    Route::put('/user/address/{id}', [AddressController::class, 'updateAddress']);
+    Route::delete('/user/address/{id}', [AddressController::class, 'deleteAddress']);
 
+    // Carrinho do usuário
     
+    Route::get('/user/cart', [CartController::class, 'cart']);
+
+
 });

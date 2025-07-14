@@ -10,7 +10,6 @@ class Cart extends Model
 
     protected $fillable = 
     [
-        'createdAt',
         'user_id',
     ];
 

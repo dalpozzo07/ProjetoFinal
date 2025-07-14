@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -63,12 +63,16 @@ class AuthController extends Controller
         ]);
 
         // Salvando os dados
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
 
+        // Todo usuário registrado ja tem um carrinho
+        
+        $user->carts()->create();
+        
         // retorna o status e a mensagem
 
         return response()->json([
@@ -76,4 +80,6 @@ class AuthController extends Controller
             'message' => 'Registro bem sucedido'
         ]);
     }
+
+
 }
