@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AddressController;
 
 Route::get('/');
 
@@ -24,11 +25,18 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/users/profile', [UserController::class, 'profile'])
-    ->name('profile');
-    Route::put('/users/profile', [UserController::class, 'updateProfile'])
-    ->name('updateProfile');
-    Route::delete('users/profile', [UserController::class, 'deleteProfile'])
-    ->name('deleteProfile');
 
+    Route::get('/users/profile', [UserController::class, 'profile']);
+
+    Route::put('/users/profile', [UserController::class, 'updateProfile']);
+
+    Route::delete('users/profile', [UserController::class, 'deleteProfile']);
+    
+    Route::get('/users/address', [AddressController::class, 'address']);
+    
+    Route::post('/users/createAddress', [AddressController::class, 'createAddress']);
+
+    Route::put('/users/updateAddress/{id}', [AddressController::class, 'updateAddress']);
+
+    Route::delete('/users/deleteAddress/{id}', [AddressController::class, 'deleteAddress']);
 });

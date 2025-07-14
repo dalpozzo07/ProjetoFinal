@@ -38,4 +38,6 @@ class AdminController extends Controller
         // isso daqui foi lindo de fazer
         
     }
+
+    
 }
