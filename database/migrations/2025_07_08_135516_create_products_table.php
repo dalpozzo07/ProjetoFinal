@@ -22,6 +22,7 @@ return new class extends Migration
             ->onDelete('cascade');
 
             $table->foreignId('discount_id')
+            ->nullable()
             ->constrained('discounts')
             ->onDelete('cascade');
             

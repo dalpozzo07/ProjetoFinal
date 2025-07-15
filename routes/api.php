@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\CouponsController;
+use App\Http\Controllers\ProductsController;
 
 Route::get('/');
 
@@ -26,6 +27,9 @@ Route::post('/register', [AuthController::class, 'register'])
 // Categorias
 Route::get('/categories', [CategoryController::class, 'category']);
 
+// Produtos
+Route::get('/products', [ProductsController::class, 'products']);
+
 // ADMIN
 Route::middleware('auth:sanctum', 'admin')->group(function () {
     //registrar moderador
@@ -36,7 +40,7 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::put('/categories/{id}', [CategoryController::class, 'updateCategory']);
     Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
 
-    //CRUD de discontos 
+    //CRUD de descontos 
     ROute::get('/discounts', [DiscountController::class, 'discount']);
     Route::post('/discounts', [DiscountController::class, 'createDiscount']);
     Route::put('/discounts/{id}', [DiscountController::class, 'updateDiscount']);
@@ -49,7 +53,15 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::delete('/coupons/{id}', [CouponsController::class, 'deleteCupons']);
 });
 
+// Rotas de CRUD dos produtos
+Route::middleware(['auth:sanctum', 'mod'])->group(function () {
+    Route::post('/products', [ProductsController::class, 'createProduct']);
+    Route::put('/products/{id}', [ProductsController::class, 'updateProduct']);
+    Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct']);
+});
 
+
+// Usuario autenticado
 Route::middleware('auth:sanctum')->group(function () {
 
     // Perfil do usuário
