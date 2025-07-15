@@ -14,7 +14,6 @@ class Order extends Model
         'status',
         'totalAmount',
         'coupon_id',
-        'totalAmount',
         'orderDate',
     ];
 

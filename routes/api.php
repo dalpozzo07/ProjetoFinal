@@ -12,6 +12,7 @@ use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/');
 
@@ -86,4 +87,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/user/cart/items/{id}', [CartItemController::class, 'deleteItemCart']);
     Route::put('/user/cart/items/{id}', [CartItemController::class, 'updateItemCart']);
     Route::delete('/user/cart/items', [CartItemController::class, 'cleanCartItems']);
+
+    // Pedidos
+    Route::get('/user/orders', [OrderController::class, 'order']);
+    Route::post('/user/orders', [OrderController::class, 'createOrder']);
+    Route::put('/user/orders/{id}', [OrderController::class, 'cancelOrder']);
 });
