@@ -56,7 +56,7 @@ class CartItemController extends Controller
     public function updateItemCart(Request $request)
     {
         $user = Auth::user();
-        $cart = $user->cart;
+        $cart = $user->carts;
         $cartItem = CartItem::find($request->id);
 
        $validated = $request->validate([
@@ -91,4 +91,26 @@ class CartItemController extends Controller
       ]);
   }
 
+  public function cleanCartItems(Request $request)
+  {
+
+     $user = Auth::user();
+     $cart = $user->carts;
+
+     
+    if (!$cart) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Carrinho não encontrado.'
+        ], 404);
+    }
+
+     CartItem::where('cart_id', $cart->id)->delete();
+       return response()->json([
+        'status' => true,
+        'message' => 'Carrinho esvaziado com sucesso.'
+    ]);
+
+
+ }
 }
