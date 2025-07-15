@@ -11,6 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\CartItemController;
 
 Route::get('/');
 
@@ -79,5 +80,9 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/user/cart', [CartController::class, 'cart']);
 
-
+    // CRUD de carrinho
+    Route::post('/user/cart/items', [CartItemController::class, 'addItemCart']);
+    Route::get('/user/cart/items', [CartItemController::class, 'cartItem']);
+    Route::delete('/user/cart/items/{id}', [CartItemController::class, 'deleteItemCart']);
+    Route::put('/user/cart/items/{id}', [CartItemController::class, 'updateItemCart']);
 });
