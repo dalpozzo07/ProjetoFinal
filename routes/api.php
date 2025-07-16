@@ -13,6 +13,7 @@ use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ModeratorController;
 
 Route::get('/');
 
@@ -53,6 +54,12 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
     Route::post('/coupons', [CouponsController::class, 'createCupons']);
     Route::put('/coupons/{id}', [CouponsController::class, 'updateCupons']);
     Route::delete('/coupons/{id}', [CouponsController::class, 'deleteCupons']);
+
+    // CRUD de produtos 
+
+    Route::post('/products', [ProductsController::class, 'createProduct']);
+    Route::put('/products/{id}', [ProductsController::class, 'updateProduct']);
+    Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct']);
 });
 
 // Rotas de CRUD dos produtos
@@ -60,6 +67,10 @@ Route::middleware(['auth:sanctum', 'mod'])->group(function () {
     Route::post('/products', [ProductsController::class, 'createProduct']);
     Route::put('/products/{id}', [ProductsController::class, 'updateProduct']);
     Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct']);
+
+    // Atualizar o status de um pedido
+
+    Route::put('/users/orders/{id}', [ModeratorController::class, 'updateOrderStatus']);
 });
 
 
