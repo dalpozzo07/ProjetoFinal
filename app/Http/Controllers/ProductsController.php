@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Discount;
 
 class ProductsController extends Controller
 {
@@ -20,12 +21,15 @@ class ProductsController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|numeric',
             'stock' => 'required|numeric',
-            'discount_id' => 'nullable|numeric',
         ]);
 
         
+        
        
-       Product::create($validated);
+       $product = Product::create($validated);
+        
+   
+       $product->save();
 
         return response()->json([
             'status' => true,
@@ -40,7 +44,6 @@ class ProductsController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|numeric',
             'stock' => 'required|numeric',
-            'discount_id' => 'nullable|numeric',
         ]);
         
         $product = Product::find($request->id);
@@ -50,7 +53,6 @@ class ProductsController extends Controller
             'price' => $request->price,
             'category_id' => $request->category_id,
             'stock' => $request->stock,
-            'discount_id' => $request->discount_id, 
         ]);
 
         return response()->json([

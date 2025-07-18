@@ -57,9 +57,7 @@ Route::middleware('auth:sanctum', 'admin')->group(function () {
 
     // CRUD de produtos 
 
-    Route::post('/products', [ProductsController::class, 'createProduct']);
-    Route::put('/products/{id}', [ProductsController::class, 'updateProduct']);
-    Route::delete('/products/{id}', [ProductsController::class, 'deleteProduct']);
+    
 });
 
 // Rotas de CRUD dos produtos

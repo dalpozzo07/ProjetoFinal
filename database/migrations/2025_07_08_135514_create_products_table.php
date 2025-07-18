@@ -21,10 +21,6 @@ return new class extends Migration
             ->constrained('categories')     
             ->onDelete('cascade');
 
-            $table->foreignId('discount_id')
-            ->nullable()
-            ->constrained('discounts')
-            ->onDelete('cascade');
             
             $table->timestamps();
         });

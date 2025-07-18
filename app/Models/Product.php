@@ -14,7 +14,7 @@ class Product extends Model
         'name',
         'stock',
         'price',
-        'discount_id',
+    
     ];
 
     public function categories()
@@ -29,6 +29,6 @@ class Product extends Model
 
     public function discounts()
     {
-        return $this->hasMany(Discount::class, 'discount_id');
+        return $this->hasMany(Discount::class);
     }
 }

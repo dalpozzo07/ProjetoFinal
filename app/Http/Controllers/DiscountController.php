@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Discount;
 use Illuminate\Http\Request;
+use App\Models\Product;
+
 
 
 class DiscountController extends Controller
@@ -21,9 +23,23 @@ class DiscountController extends Controller
             'endDate' => 'required',
             'description' => 'required',
             'discountPercentage' => 'required',
+            'product_id' => 'nullable|numeric',
         ]);
         
         Discount::create($validated);
+
+         $product = Product::find($validated['product_id']);
+
+        $discounts = $product->discounts; // desconto ativos
+        $price = $product->price;
+
+        foreach ($discounts as $discount) {
+        $price *= (1 - $discount->discountPercentage / 100);
+    }
+            $product->update();
+            $discount->save();
+
+
 
         return response()->json([
             'status' => true,
@@ -38,6 +54,7 @@ class DiscountController extends Controller
         'endDate' => 'required|date',
         'description' => 'required|string',
         'discountPercentage' => 'required|numeric',
+        'product_id' => 'nullable|numeric',
     ]);
 
     $discount = Discount::findOrFail($id);

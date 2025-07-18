@@ -16,10 +16,14 @@ class EnsureUserIsMod
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || Auth::user()->role !== 'MODERATOR') {
+        $user = Auth::user();
+
+        // o admin ta aqui para entrar em rotas que o mod também está autorizado
+        if (!$user || !in_array($user->role, ['ADMIN', 'MODERATOR'])) {
             abort(403, 'Acesso negado');
         }
 
         return $next($request);
     }
+
 }
