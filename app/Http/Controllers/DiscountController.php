@@ -26,18 +26,19 @@ class DiscountController extends Controller
             'product_id' => 'nullable|numeric',
         ]);
         
-        Discount::create($validated);
+        $discount = Discount::create($validated);
 
-         $product = Product::find($validated['product_id']);
+        $product = Product::find($validated['product_id']);
+        
+        $precoOriginal = $product->price;
+        $precoFinal = $precoOriginal - ($precoOriginal * ($validated['discountPercentage'] / 100));
+        $product->update([
+            'price' => $precoFinal
+            ]);
 
-        $discounts = $product->discounts; // desconto ativos
-        $price = $product->price;
+        $discount->save();
 
-        foreach ($discounts as $discount) {
-        $price *= (1 - $discount->discountPercentage / 100);
-    }
-            $product->update();
-            $discount->save();
+           
 
 
 
