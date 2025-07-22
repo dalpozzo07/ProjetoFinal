@@ -7,8 +7,11 @@ use App\Models\Order;
 use App\Models\OrderItems;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CartItem;
+use App\Models\Product;
 
 class OrderController extends Controller
+
+    // ver todos seus pedidos
 {
     public function order(Request $request)
     {
@@ -18,6 +21,7 @@ class OrderController extends Controller
        
     }
 
+        // fazer o pedido
     public function createOrder(Request $request)
 {
     $user = Auth::user();
@@ -45,7 +49,6 @@ class OrderController extends Controller
         'status' => 'required|string',
     ]);
 
-    $validated['orderDate'] = date('Y-m-d H:i:s', strtotime($validated['orderDate']));
 
     $order = Order::create([
         'user_id' => $user->id,
@@ -56,16 +59,34 @@ class OrderController extends Controller
         'orderDate' => $validated['orderDate'],
     ]);
 
-    foreach ($cart->cartItems as $item) {
-        OrderItems::create([
-            'order_id' => $order->id,
-            'product_id' => $item->product_id,
-            'quantity' => $item->quantity,
-            'unitPrice' => $item->unitPrice,
-        ]);
+    $totalAmount = 0;
 
-        $order->totalAmount += $item->quantity * $item->unitPrice;
+    foreach ($cart->cartItems as $item) {
+
+    $product = Product::find($item->product_id);
+    $unitPrice = $product->price;
+
+     $discount = \App\Models\Discount::where('product_id', $product->id)
+        ->where('startDate', '<=', now())
+        ->where('endDate', '>=', now())
+        ->first();
+
+      if ($discount) {
+        $unitPrice -= ($unitPrice * ($discount->discountPercentage / 100));
     }
+
+    OrderItems::create([
+        'order_id' => $order->id,
+        'product_id' => $item->product_id,
+        'quantity' => $item->quantity,
+        'unitPrice' => $unitPrice,
+    ]);
+
+    $totalAmount += $item->quantity * $unitPrice;
+}
+
+
+$order->totalAmount = $totalAmount;
 
     // Aplicar desconto do cupom (se houver)
     if ($order->coupon_id) {
@@ -85,6 +106,10 @@ class OrderController extends Controller
     ]);
 }
 
+
+
+
+    // CANCELAR O PEDIDO
     public function cancelOrder(Request $request)
     {
         $user = Auth::user();

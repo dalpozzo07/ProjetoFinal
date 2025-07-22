@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Discount;
+use Carbon\Carbon;
+
 
 class ProductsController extends Controller
 {
     public function products(Request $request)
     {
-        $products = Product::all();
-        return response()->json($products);
+        $product = Product::all();  
+       
+    
+        return response()->json($product);
     }
 
     public function createProduct(Request $request)
@@ -21,13 +25,20 @@ class ProductsController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|numeric',
             'stock' => 'required|numeric',
+            'image' => 'nullable|file|mimes:jpg,bmp,png|max:2048',
         ]);
 
         
         
        
-       $product = Product::create($validated);
+       $product = Product::create([
+           'name' => $request->name,
+           'price' => $request->price,
+           'category_id' => $request->category_id,
+           'stock' => $request->stock,  
+       ]);
         
+       $precoOriginal = $product->price;
    
        $product->save();
 
@@ -44,6 +55,7 @@ class ProductsController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|numeric',
             'stock' => 'required|numeric',
+            'image' => 'required|file|mimes:jpg,bmp,png|max:2048',
         ]);
         
         $product = Product::find($request->id);
@@ -53,6 +65,7 @@ class ProductsController extends Controller
             'price' => $request->price,
             'category_id' => $request->category_id,
             'stock' => $request->stock,
+            'image' => $request->image,
         ]);
 
         return response()->json([

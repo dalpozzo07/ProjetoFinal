@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('stock');
-            $table->decimal('price', 10 , 2);
+            $table->decimal('price', 10 , 2);    
+            $table->string('image')
+            ->nullable();
 
             $table->foreignId('category_id')
             ->constrained('categories')     

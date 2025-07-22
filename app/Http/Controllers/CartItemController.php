@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use App\Models\Product;
+use App\Models\Discount;
 
 class CartItemController extends Controller
 {
@@ -25,12 +27,10 @@ class CartItemController extends Controller
        $validated = $request->validate([
         'product_id' => 'required|exists:products,id',
         'quantity' => 'required|integer|min:1',
-        'unitPrice' => 'required|numeric',
     ]);
 
       $cart = $user->cart;
-
-    
+     
       $cart = Cart::where('user_id', $user->id)->first();
 
         if (!$cart) {
@@ -39,17 +39,30 @@ class CartItemController extends Controller
         ]);
     }
 
+     $product = Product::find($validated['product_id']);
+      $unitPrice = $product->price;
+
+      $discount = Discount::where('product_id', $product->id)
+            ->where('startDate', '<=', now())
+            ->where('endDate', '>=', now())
+            ->first();
+
+        if ($discount) {
+            $unitPrice -= ($unitPrice * ($discount->discountPercentage / 100));
+        }        
+
         CartItem::create([
         'product_id' => $validated['product_id'],
         'quantity' => $validated['quantity'],
-        'unitPrice' => $validated['unitPrice'],
-        'cart_id' => $cart->id, // 
+        'unitPrice' => $unitPrice,
+        'cart_id' => $cart->id, 
     ]);
         
 
         return response()->json([
             'status' => true,
-            'message' => 'Item adicionado ao carrinho com sucesso'
+            'message' => 'Item adicionado ao carrinho com sucesso',
+            'unitPrice' => $unitPrice,
         ]);
     }
 
@@ -62,13 +75,24 @@ class CartItemController extends Controller
        $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
-            'unitPrice' => 'required|numeric',
+
        ]);
 
+       $product = Product::find($validated['product_id']);
+        $unitPrice = $product->price;
+       
+         $discount = Discount::where('product_id', $product->id)
+            ->where('startDate', '<=', now())
+            ->where('endDate', '>=', now())
+            ->first();
+        
+        if ($discount) {
+            $unitPrice -= ($unitPrice * ($discount->discountPercentage / 100));
+        }
        $cartItem->update([
            'product_id' => $validated['product_id'],
            'quantity' => $validated['quantity'],
-           'unitPrice' => $validated['unitPrice'],
+           'unitPrice' => $unitPrice,
        ]);
 
        return response()->json([

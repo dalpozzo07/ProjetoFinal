@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Carbon\Carbon;
 
 
 
@@ -28,19 +29,7 @@ class DiscountController extends Controller
         
         $discount = Discount::create($validated);
 
-        $product = Product::find($validated['product_id']);
-        
-        $precoOriginal = $product->price;
-        $precoFinal = $precoOriginal - ($precoOriginal * ($validated['discountPercentage'] / 100));
-        $product->update([
-            'price' => $precoFinal
-            ]);
-
         $discount->save();
-
-           
-
-
 
         return response()->json([
             'status' => true,
@@ -59,6 +48,19 @@ class DiscountController extends Controller
     ]);
 
     $discount = Discount::findOrFail($id);
+
+
+     $product = Product::find($validated['product_id']);
+        
+        $precoOriginal = $product->price;
+        $precoFinal = $precoOriginal - ($precoOriginal * ($validated['discountPercentage'] / 100));
+        $product->update([
+            'price' => $precoFinal
+        ]);
+
+       
+    
+
     $discount->update($validated);
 
     return response()->json([
