@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\Discount;
-use Carbon\Carbon;
+
 
 
 class ProductsController extends Controller
@@ -16,6 +15,36 @@ class ProductsController extends Controller
        
     
         return response()->json($product);
+    }
+
+    public function getProduct(Request $request, $id)
+    {
+
+      $product = Product::where('id', $id)->first();
+
+      if (!$product) {
+        return response()->json([
+          'status' => false,
+          'message' => 'Produto não encontrado'
+        ]);
+      }
+      
+      return response()->json($product);
+       
+    }
+
+    public function getProductsByCategory(Request $request, $id)
+    {
+      $product = Product::where('category_id', $id)->get();
+
+      if (!$product) {
+        return response()->json([
+          'status' => false,
+          'message' => 'Produto não encontrado'
+        ]);
+      }
+
+      return response()->json($product);
     }
 
     public function createProduct(Request $request)
@@ -55,7 +84,7 @@ class ProductsController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|numeric',
             'stock' => 'required|numeric',
-            'image' => 'required|file|mimes:jpg,bmp,png|max:2048',
+            'image' => 'nullable|file|mimes:jpg,bmp,png|max:2048',
         ]);
         
         $product = Product::find($request->id);
@@ -71,6 +100,20 @@ class ProductsController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Produto atualizado com sucesso'
+        ]);
+    }
+
+    public function updateStock(Request $request)
+    {
+        $product = Product::find($request->product_id);
+
+        $product->update([
+            'stock' => $request->stock,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Stock atualizado com sucesso'
         ]);
     }
 

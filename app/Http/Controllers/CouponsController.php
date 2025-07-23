@@ -15,6 +15,22 @@ class CouponsController extends Controller
        
     }
 
+    public function getCupons(Request $request, $id)
+    {
+
+      $cupons = Coupon::where('id', $id)->first();
+
+      if (!$cupons) {
+        return response()->json([
+          'status' => false,
+          'message' => 'Cupons não encontrado'
+        ]);
+      }
+      
+      return response()->json($cupons);
+       
+    }
+    
     public function createCupons(Request $request)
     {
         $validateData = $request->validate([

@@ -15,6 +15,22 @@ class CategoryController extends Controller
       
     }
 
+    public function getCategory(Request $request, $id)
+    {
+
+      $category = Category::where('id', $id)->first();
+
+      if (!$category) {
+        return response()->json([
+          'status' => false,
+          'message' => 'Categoria não encontrada'
+        ]);
+      }
+
+      return response()->json($category);
+       
+    }
+
     public function createCategory(Request $request)
     {
         $request->validate([

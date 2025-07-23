@@ -7,14 +7,34 @@ use App\Models\Address;
 
 class AddressController extends Controller
 {
+    // ver os endereços que o usuario autenticado possui
     public function address(Request $request)
     {
 
-      $address = Address::all();
+        $address = Address::where('user_id', $request->user()->id)->get();
+        return response()->json($address);
+    }
+
+    // ver um endereço específico
+    public function getAddress(Request $request, $id)
+    {
+
+      $address = Address::where('user_id', $request->user()->id)
+      ->where('id', $id)
+      ->first();
+
+      if (!$address) {
+        return response()->json([
+          'status' => false,
+          'message' => 'Endereço não encontrado'
+        ]);
+      }
+      
       return response()->json($address);
        
     }
 
+    // criar um novo endereço
     public function createAddress(Request $request)
     {
         $request->validate([
@@ -43,6 +63,7 @@ class AddressController extends Controller
         
     }
 
+    // atualizar um endereço
     public function updateAddress(Request $request)
     {
         $request->validate([
@@ -72,9 +93,13 @@ class AddressController extends Controller
         
     }
 
-    public function deleteAddress(Request $request)
+    // deletar um endereço
+    public function deleteAddress(Request $request, $id)
     {
-        $address = Address::find($request->id);
+        
+        $address = Address::where('user_id', $request->user()->id)
+        ->where('id', $id)
+        ->first();
 
         $address->delete();
 

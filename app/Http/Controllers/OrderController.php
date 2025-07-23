@@ -16,7 +16,31 @@ class OrderController extends Controller
     public function order(Request $request)
     {
 
-      $order = Order::all();
+     $order = Order::where('user_id', Auth::user()->id)->get();
+
+     if(!$order) {  
+        return response()->json([
+            'status' => false,
+            'message' => 'Pedido não encontrado'
+        ]);
+      }
+
+     return response()->json($order);
+       
+    }
+
+    public function getOrder(Request $request, $id)
+    {
+
+      $order = Order::where('id', $id)->first();
+
+      if (!$order) {
+        return response()->json([
+          'status' => false,
+          'message' => 'Pedido não encontrado'
+        ]);
+      }
+      
       return response()->json($order);
        
     }
@@ -41,22 +65,41 @@ class OrderController extends Controller
         ], 404);
     }
     
+    // basicamente essa função vai pegar todos os produtos que estão no carrinho
+    $products = $cart->cartItems->pluck('product_id')->toArray();
+
+    foreach($products as $product) {
+        $product = Product::find($product);
+        $stock = $product->stock;
+        $quantity = $cart->cartItems->where('product_id', $product->id)->first()->quantity;
+        if($stock <= 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Produto está esgotado.'
+            ], 404);
+        }
+        
+        $stock -= $quantity;
+
+        $product->update([
+            'stock' => $stock
+        ]);
+
+    }
 
     $validated = $request->validate([
         'coupon_id' => 'nullable|exists:coupons,id',
         'address_id' => 'required|exists:addresses,id',
-        'orderDate' => 'required|date',
-        'status' => 'required|string',
     ]);
 
 
     $order = Order::create([
         'user_id' => $user->id,
         'address_id' => $validated['address_id'],
-        'status' => $validated['status'],
+        'status' => 'PENDING',
         'totalAmount' => 0,
         'coupon_id' => $validated['coupon_id'] ?? null,
-        'orderDate' => $validated['orderDate'],
+        'orderDate' => now(),
     ]);
 
     $totalAmount = 0;
@@ -127,6 +170,19 @@ $order->totalAmount = $totalAmount;
             'status' => false,
             'message' => 'Pedido já foi processado e não pode ser cancelado.'
         ], 400);
+    }
+
+    $orderItems = OrderItems::where('order_id', $request->id)->get();
+
+    foreach($orderItems as $orderItem) {
+        $product = Product::find($orderItem->product_id);
+        $stock = $product->stock;
+        $quantity = $orderItem->quantity;
+        $stock += $quantity;
+
+        $product->update([
+            'stock' => $stock
+        ]);
     }
 
     $order->status = 'CANCELED';

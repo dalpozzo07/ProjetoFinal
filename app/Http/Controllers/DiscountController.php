@@ -17,6 +17,20 @@ class DiscountController extends Controller
         return response()->json($discount);
     }
 
+    public function getDiscount($id)
+    {
+        $discount = Discount::find($id);
+
+        if(!$discount) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Desconto não encontrado'
+            ]);
+        }
+        
+        return response()->json($discount);
+    }
+
     public function createDiscount(Request $request)
     {
         $validated = $request->validate([

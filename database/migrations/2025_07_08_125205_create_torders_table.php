@@ -12,7 +12,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->timestamp('orderDate');
-            $table->enum('status', ['PENDING', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELED']);
+            $table->enum('status', ['PENDING', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELED'])
+            ->default('PENDING');
             $table->decimal('totalAmount',10,2);
             
             $table->foreignId('coupon_id')
