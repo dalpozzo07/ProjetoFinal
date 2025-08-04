@@ -62,7 +62,7 @@ class CartItemController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Item adicionado ao carrinho com sucesso',
-            'unitPrice' => $unitPrice,
+            'unitPrice' => number_format($unitPrice, 2, '.', ''),
         ]);
     }
 
@@ -89,10 +89,11 @@ class CartItemController extends Controller
         if ($discount) {
             $unitPrice -= ($unitPrice * ($discount->discountPercentage / 100));
         }
+
        $cartItem->update([
            'product_id' => $validated['product_id'],
            'quantity' => $validated['quantity'],
-           'unitPrice' => $unitPrice,
+           'unitPrice' => number_format($unitPrice, 2, '.', ''),
        ]);
 
        return response()->json([

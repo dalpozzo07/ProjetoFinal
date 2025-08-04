@@ -32,4 +32,9 @@ class Product extends Model
     {
         return $this->hasMany(Discount::class);
     } 
+
+    public function activeDiscounts()
+    {
+        return $this->discounts()->where('startDate', '<=', now())->where('endDate', '>=', now());
+    }
 }

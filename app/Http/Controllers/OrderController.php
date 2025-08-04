@@ -72,6 +72,7 @@ class OrderController extends Controller
         $product = Product::find($product);
         $stock = $product->stock;
         $quantity = $cart->cartItems->where('product_id', $product->id)->first()->quantity;
+        
         if($stock <= 0) {
             return response()->json([
                 'status' => false,
@@ -109,10 +110,9 @@ class OrderController extends Controller
     $product = Product::find($item->product_id);
     $unitPrice = $product->price;
 
-     $discount = \App\Models\Discount::where('product_id', $product->id)
-        ->where('startDate', '<=', now())
-        ->where('endDate', '>=', now())
-        ->first();
+
+
+     $discount = Product::find($item->product_id)->activeDiscounts()->first();
 
       if ($discount) {
         $unitPrice -= ($unitPrice * ($discount->discountPercentage / 100));

@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 use App\Models\Discount;
 use Illuminate\Http\Request;
-use App\Models\Product;
-use Carbon\Carbon;
-
-
 
 class DiscountController extends Controller
 {
@@ -53,6 +49,15 @@ class DiscountController extends Controller
 
     public function updateDiscount(Request $request, $id)
 {
+$discount = Discount::find($id);
+
+    if (!$discount) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Desconto não encontrado'
+        ], 404);
+    }
+
     $validated = $request->validate([
         'startDate' => 'required|date',
         'endDate' => 'required|date',
@@ -60,20 +65,6 @@ class DiscountController extends Controller
         'discountPercentage' => 'required|numeric',
         'product_id' => 'nullable|numeric',
     ]);
-
-    $discount = Discount::findOrFail($id);
-
-
-     $product = Product::find($validated['product_id']);
-        
-        $precoOriginal = $product->price;
-        $precoFinal = $precoOriginal - ($precoOriginal * ($validated['discountPercentage'] / 100));
-        $product->update([
-            'price' => $precoFinal
-        ]);
-
-       
-    
 
     $discount->update($validated);
 
