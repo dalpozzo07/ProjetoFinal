@@ -16,6 +16,7 @@ class OrderController extends Controller
     public function order(Request $request)
     {
 
+        // Verifica se o usuário tem pedidos
      $order = Order::where('user_id', Auth::user()->id)->get();
 
      if(!$order) {  
@@ -29,6 +30,7 @@ class OrderController extends Controller
        
     }
 
+    // Obter um pedido específico
     public function getOrder(Request $request, $id)
     {
 
@@ -73,6 +75,7 @@ class OrderController extends Controller
         $stock = $product->stock;
         $quantity = $cart->cartItems->where('product_id', $product->id)->first()->quantity;
         
+        // Verifica se o estoque do produto é suficiente
         if($stock <= 0) {
             return response()->json([
                 'status' => false,
@@ -80,6 +83,7 @@ class OrderController extends Controller
             ], 404);
         }
         
+        // Atualiza o estoque do produto
         $stock -= $quantity;
 
         $product->update([
@@ -88,12 +92,14 @@ class OrderController extends Controller
 
     }
 
+    // Validação dos dados do pedido
     $validated = $request->validate([
         'coupon_id' => 'nullable|exists:coupons,id',
         'address_id' => 'required|exists:addresses,id',
     ]);
 
 
+    // Cria um novo pedido
     $order = Order::create([
         'user_id' => $user->id,
         'address_id' => $validated['address_id'],
@@ -105,19 +111,22 @@ class OrderController extends Controller
 
     $totalAmount = 0;
 
+    // Aqui é onde o pedido é criado, e cada item é adicionado ao pedido
     foreach ($cart->cartItems as $item) {
 
     $product = Product::find($item->product_id);
     $unitPrice = $product->price;
 
 
-
+        // Verifica se existe um desconto para o produto, e se ele é válido
      $discount = Product::find($item->product_id)->activeDiscounts()->first();
 
+      // se tiver um desconto, aplica-o ao preço unitário
       if ($discount) {
         $unitPrice -= ($unitPrice * ($discount->discountPercentage / 100));
     }
 
+    // Cria um novo item de pedido
     OrderItems::create([
         'order_id' => $order->id,
         'product_id' => $item->product_id,
@@ -174,6 +183,7 @@ $order->totalAmount = $totalAmount;
 
     $orderItems = OrderItems::where('order_id', $request->id)->get();
 
+    // aqui é uma lógica reversa para devolver o estoque do produto para o estoque original
     foreach($orderItems as $orderItem) {
         $product = Product::find($orderItem->product_id);
         $stock = $product->stock;
